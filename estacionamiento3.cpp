@@ -22,9 +22,31 @@ void inicializarEstacionamiento() { //inicia cantidad de lugares, ocupacion y ti
     estacionamiento["E2"] = {false, NORMAL};
     estacionamiento["E3"] = {false, NORMAL};
     estacionamiento["E4"] = {false, NORMAL};
+    estacionamiento["E5"] = {false, NORMAL};
+    estacionamiento["E6"] = {false, NORMAL};
+    estacionamiento["E7"] = {false, NORMAL};
+    estacionamiento["E8"] = {false, NORMAL};
     estacionamiento["C1"] = {false, ELECTRICO};
     estacionamiento["C2"] = {false, ELECTRICO};
 }//añadir mas, desocupados por default1
+
+void dibujarEstacionamiento() {
+    string colorLibre = "\033[32m";   //verde
+    string colorOcupado = "\033[31m"; //rojo
+    string reset = "\033[0m";//reset necesario despues de asignar color
+
+    cout << "\nvisualizacion del estacionamiento:\n";
+    for (const auto& par : estacionamiento) {
+        string tipo = (par.second.tipo == ELECTRICO) ? "C" : "E";
+        string estado = par.second.ocupado ? "O" : "L";
+        string color = par.second.ocupado ? colorOcupado : colorLibre;
+
+        cout << color << "[" << par.first << " - " << tipo << "-" << estado << "] " << reset; //concatena todo el desmadre de claves valor y colores
+    }
+    cout << "\n\nLeyenda: E = Espacio normal, C = Estación eléctrica\n";
+    cout <<  colorLibre << "         L = Libre (verde), " << reset << colorOcupado << "O = Ocupado (rojo)\n"<< reset ;
+}
+
 
 int main() {
     inicializarEstacionamiento();
@@ -61,7 +83,7 @@ int main() {
                 //liberarEspacio(idEspacio);
                 break;
             case 5:
-                //dibujarEstacionamiento();
+                dibujarEstacionamiento();
                 break;
             case 6:
                 cout << "exit\n";
