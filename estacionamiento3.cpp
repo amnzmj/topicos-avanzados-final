@@ -11,61 +11,85 @@ enum TipoEspacio { NORMAL, ELECTRICO }; //para solo usar estos valores en vez de
 struct Espacio { //agrupar diferentes tipos de datos bajo un solo nombre
     bool ocupado = false;
     TipoEspacio tipo;
-};//espacio tiene dos propiedades tipo y si está ocupado
+    string idAuto = ""; //almacena el ID del auto
+};//espacio tiene 3 propiedades tipo, si está ocupado y id del carro
 //usar esto ahorra mucho desmadre
 
 map<string, Espacio> estacionamiento;
 queue<string> fila_espera;
 
 void inicializarEstacionamiento() { //inicia cantidad de lugares, ocupacion y tipo
-    estacionamiento["E1"] = {false, NORMAL};
-    estacionamiento["E2"] = {false, NORMAL};
-    estacionamiento["E3"] = {false, NORMAL};
-    estacionamiento["E4"] = {false, NORMAL};
-    estacionamiento["E5"] = {false, NORMAL};
-    estacionamiento["E6"] = {false, NORMAL};
-    estacionamiento["E7"] = {false, NORMAL};
-    estacionamiento["E8"] = {false, NORMAL};
-    estacionamiento["C1"] = {false, ELECTRICO};
-    estacionamiento["C2"] = {false, ELECTRICO};
-}//añadir mas, desocupados por default1
+    estacionamiento["01"] = {false, NORMAL};
+    estacionamiento["02"] = {false, NORMAL};
+    estacionamiento["03"] = {false, NORMAL};
+    estacionamiento["04"] = {false, NORMAL};
+    estacionamiento["04"] = {false, NORMAL};
+    estacionamiento["05"] = {false, NORMAL};
+    estacionamiento["06"] = {false, NORMAL};
+    estacionamiento["07"] = {false, NORMAL};
+    estacionamiento["08"] = {false, ELECTRICO};
+    estacionamiento["09"] = {false, ELECTRICO};
+}//añadir mas, desocupados por default
 
 void dibujarEstacionamiento() {
-    string colorLibre = "\033[32m";   //verde
-    string colorOcupado = "\033[31m"; //rojo
+    string colorLibre = "\033[32m";   // Verde
+    string colorOcupado = "\033[31m"; // Rojo
     string reset = "\033[0m";//reset necesario despues de asignar color
 
-    cout << "\nvisualizacion del estacionamiento:\n";
+    cout << "\nVisualización del estacionamiento:\n";
     for (const auto& par : estacionamiento) {
-        string tipo = (par.second.tipo == ELECTRICO) ? "C" : "E";
+        string tipo = (par.second.tipo == ELECTRICO) ? "E" : "N";
         string estado = par.second.ocupado ? "O" : "L";
         string color = par.second.ocupado ? colorOcupado : colorLibre;
+        string info = par.second.ocupado ? (" - " + par.second.idAuto) : "";
 
-        cout << color << "[" << par.first << " - " << tipo << "-" << estado << "] " << reset; //concatena todo el desmadre de claves valor y colores
+        cout << color << "[" << par.first << " - " << tipo << "-" << estado << info << "] " << reset;//concatena todo el desmadre de claves valor y colores
     }
-    cout << "\n\nLeyenda: E = Espacio normal, C = Estación eléctrica\n";
-    cout <<  colorLibre << "         L = Libre (verde), " << reset << colorOcupado << "O = Ocupado (rojo)\n"<< reset ;
+    cout << "\n\nLeyenda: N = Espacio normal, E = Estación eléctrica\n";
+    cout << "         L = Libre (verde), O = Ocupado (rojo)\n";
 }
 
 bool asignarEspacio(string idAuto, TipoEspacio preferido) {
-    for (auto & par : estacionamiento) { //itera y deduce automaticamente el tipo de variable 
+    for (auto& par : estacionamiento) {//itera y deduce automaticamente el tipo de variable 
         if (!par.second.ocupado && par.second.tipo == preferido) {//si ese espacio no está ocupado y si el tipo del espacio es igual al tipo que el auto necesita
-
+            
             par.second.ocupado = true;//lo marca entonces como ocupado
-            cout << "auto " << idAuto << " asignado a " << par.first << "\n";
-            return false;
+            par.second.idAuto = idAuto;
+            cout << "Auto " << idAuto << " asignado a " << par.first << "\n";
+            return true;
             //falta un else por si no encuentra espacio
         }
     }
+    fila_espera.push(idAuto);
+    cout << "No hay espacio disponible. " << idAuto << " a la espera.\n";
     return false;
 }
+
+void liberarEspacio(string idEspacio) {
+    
+    auto it = estacionamiento.find(idEspacio);
+    if (it != estacionamiento.end() && it->second.ocupado) {
+        it->second.ocupado = false;
+        it->second.idAuto = "";
+        cout << "Espacio " << idEspacio << " ha sido liberado.\n";
+        if (!fila_espera.empty()) {
+            string siguiente = fila_espera.front();
+            fila_espera.pop();
+            asignarEspacio(siguiente, it->second.tipo);
+        }
+    } else {
+        cout << "Espacio no encontrado o ya está libre.\n";
+    }
+}
+
+
 
 int main() {
     inicializarEstacionamiento();
     int opcion;
     string idAuto, idEspacio;
     do {
-        cout << "\n\n\033[34m----menu----\033[0m\n";
+        cout << "\n\n\033[34mmenu\033[0m\n";
         cout << "\n1. Mostrar estado\n";
         cout << "2. Estacionar auto normal\n";
         cout << "3. Estacionar auto eléctrico\n";
@@ -76,32 +100,31 @@ int main() {
         cin >> opcion;
         switch (opcion) {
             case 1:
-                cout << "mostrar estado";
                 //mostrarEstado();
                 break;
             case 2:
-                cout << "ID del auto: ";
+                cout << "placa: ";
                 cin >> idAuto;
                 asignarEspacio(idAuto, NORMAL);
                 break;
             case 3:
-                cout << "ID del auto: ";
+                cout << "placa: ";
                 cin >> idAuto;
                 asignarEspacio(idAuto, ELECTRICO);
                 break;
             case 4:
-                cout << "ID del espacio a liberar: ";
+                cout << "espacio a liberar: ";
                 cin >> idEspacio;
-                //liberarEspacio(idEspacio);
+                liberarEspacio(idEspacio);
                 break;
             case 5:
                 dibujarEstacionamiento();
                 break;
             case 6:
-                cout << "exit\n";
+                cout << "bai\n";
                 break;
             default:
-                cout << "opcion no valida.\n";
+                cout << "Opción no válida.\n";
         }
     } while (opcion != 6);
     return 0;
