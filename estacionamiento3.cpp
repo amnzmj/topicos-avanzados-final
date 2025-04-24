@@ -47,6 +47,18 @@ void dibujarEstacionamiento() {
     cout <<  colorLibre << "         L = Libre (verde), " << reset << colorOcupado << "O = Ocupado (rojo)\n"<< reset ;
 }
 
+bool asignarEspacio(string idAuto, TipoEspacio preferido) {
+    for (auto & par : estacionamiento) { //itera y deduce automaticamente el tipo de variable 
+        if (!par.second.ocupado && par.second.tipo == preferido) {//si ese espacio no está ocupado y si el tipo del espacio es igual al tipo que el auto necesita
+
+            par.second.ocupado = true;//lo marca entonces como ocupado
+            cout << "auto " << idAuto << " asignado a " << par.first << "\n";
+            return false;
+            //falta un else por si no encuentra espacio
+        }
+    }
+    return false;
+}
 
 int main() {
     inicializarEstacionamiento();
@@ -70,12 +82,12 @@ int main() {
             case 2:
                 cout << "ID del auto: ";
                 cin >> idAuto;
-                //asignarEspacio(idAuto, NORMAL);
+                asignarEspacio(idAuto, NORMAL);
                 break;
             case 3:
                 cout << "ID del auto: ";
                 cin >> idAuto;
-                //asignarEspacio(idAuto, ELECTRICO);
+                asignarEspacio(idAuto, ELECTRICO);
                 break;
             case 4:
                 cout << "ID del espacio a liberar: ";
