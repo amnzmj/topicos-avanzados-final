@@ -82,6 +82,24 @@ void liberarEspacio(string idEspacio) {
     }
 }
 
+void mostrarEstado() {
+    cout << "\nEstado del estacionamiento:\n";
+    for (const auto& par : estacionamiento) {
+        cout << par.first << " - "
+             << (par.second.tipo == ELECTRICO ? "Eléctrico" : "Normal") << " - "
+             << (par.second.ocupado ? ("Ocupado por " + par.second.idAuto) : "Libre") << "\n";
+    }
+    cout << "\nEn espera: ";
+    if (fila_espera.empty()) cout << "Ninguno\n";
+    else {
+        queue<string> copia = fila_espera;
+        while (!copia.empty()) {
+            cout << copia.front() << " ";
+            copia.pop();
+        }
+        cout << "\n";
+    }
+}
 
 
 int main() {
@@ -95,12 +113,13 @@ int main() {
         cout << "3. Estacionar auto eléctrico\n";
         cout << "4. Liberar espacio\n";
         cout << "5. Visualizar estacionamiento\n";
-        cout << "6. Salir\n\n";
+        cout << "6. agregar carritto a la cola\n";
+        cout << "7. Salir\n\n";
         cout << "Selecciona una opción: ";
         cin >> opcion;
         switch (opcion) {
             case 1:
-                //mostrarEstado();
+                mostrarEstado();
                 break;
             case 2:
                 cout << "placa: ";
@@ -121,11 +140,17 @@ int main() {
                 dibujarEstacionamiento();
                 break;
             case 6:
+                cout << "Placa del auto a agregar a la fila: ";
+                cin >> idAuto;
+                fila_espera.push(idAuto);
+                cout << "Auto " << idAuto << " agregado a la fila de espera.\n";
+                break;
+            case 7:
                 cout << "bai\n";
                 break;
             default:
                 cout << "Opción no válida.\n";
         }
-    } while (opcion != 6);
+    } while (opcion != 7);//7 de salir
     return 0;
 }
