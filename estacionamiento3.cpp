@@ -1,5 +1,5 @@
 #include <iostream>
-#include <vector>
+#include <vector>//falta
 #include <queue>
 #include <string>
 #include <map>
@@ -61,7 +61,7 @@ bool asignarEspacio(string idAuto, TipoEspacio preferido) {
         }
     }
     fila_espera.push(idAuto);
-    cout << "No hay espacio disponible. " << idAuto << " a la espera.\n";
+    cout << "no hay espacio disponible. " << idAuto << " a la espera.\n";
     return false;
 }
 
@@ -71,14 +71,14 @@ void liberarEspacio(string idEspacio) {
     if (it != estacionamiento.end() && it->second.ocupado) {
         it->second.ocupado = false;
         it->second.idAuto = "";
-        cout << "Espacio " << idEspacio << " ha sido liberado.\n";
+        cout << "espacio " << idEspacio << " ha sido liberado.\n";
         if (!fila_espera.empty()) {
             string siguiente = fila_espera.front();
             fila_espera.pop();
             asignarEspacio(siguiente, it->second.tipo);
         }
     } else {
-        cout << "Espacio no encontrado o ya está libre.\n";
+        cout << "no existe espacio o esta libre\n";
     }
 }
 
@@ -90,7 +90,7 @@ void mostrarEstado() {
              << (par.second.ocupado ? ("Ocupado por " + par.second.idAuto) : "Libre") << "\n";
     }
     cout << "\nEn espera: ";
-    if (fila_espera.empty()) cout << "Ninguno\n";
+    if (fila_espera.empty()) cout << "ninguno\n";
     else {
         queue<string> copia = fila_espera;
         while (!copia.empty()) {
@@ -109,13 +109,13 @@ int main() {
     do {
         cout << "\n\n\033[34mmenu\033[0m\n";
         cout << "\n1. Mostrar estado\n";
-        cout << "2. Estacionar auto normal\n";
-        cout << "3. Estacionar auto eléctrico\n";
-        cout << "4. Liberar espacio\n";
-        cout << "5. Visualizar estacionamiento\n";
-        cout << "6. agregar carritto a la cola\n";
-        cout << "7. Salir\n\n";
-        cout << "Selecciona una opción: ";
+        cout << "2 estacionar auto normal\n";
+        cout << "3 estacionar auto eléctrico\n";
+        cout << "4 eiberar espacio\n";
+        cout << "5 dibujar estacionamiento\n";
+        cout << "6 agregar carritto a la cola\n";
+        cout << "7 salir\n\n";
+        cout << "Selecciona una opcion: ";
         cin >> opcion;
         switch (opcion) {
             case 1:
@@ -140,16 +140,16 @@ int main() {
                 dibujarEstacionamiento();
                 break;
             case 6:
-                cout << "Placa del auto a agregar a la fila: ";
+                cout << "placa del auto a agregar a la fila: ";
                 cin >> idAuto;
                 fila_espera.push(idAuto);
-                cout << "Auto " << idAuto << " agregado a la fila de espera.\n";
+                cout << "auto " << idAuto << " agregado a la fila de espera\n";
                 break;
             case 7:
                 cout << "bai\n";
                 break;
             default:
-                cout << "Opción no válida.\n";
+                cout << "no valido\n";
         }
     } while (opcion != 7);//7 de salir
     return 0;
