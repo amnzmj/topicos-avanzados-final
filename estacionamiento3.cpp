@@ -46,7 +46,7 @@ void dibujarEstacionamiento() {
         cout << color << "[" << par.first << " - " << tipo << "-" << estado << info << "] " << reset;//concatena todo el desmadre de claves valor y colores
     }
     cout << "\n\nLeyenda: N = Espacio normal, E = Estación eléctrica\n";
-    cout << "         L = Libre (verde), O = Ocupado (rojo)\n";
+    cout << colorLibre << "         L = Libre (verde)   "<< reset << colorOcupado << "O = Ocupado (rojo)\n"<< reset;//trucazo para los colores
 }
 
 bool asignarEspacio(string idAuto, TipoEspacio preferido) {
